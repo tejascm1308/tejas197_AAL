@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX 10
+
+char board[MAX][MAX];
+int n;
+
+
+void printSolution(int solNum) {
+	int i;
+    printf("Arrangement %d\n", solNum);
+    for ( i = 0; i < n; i++) {
+        printf("%s\n", board[i]);
+    }
+    printf("\n");
+}
+
+
+bool isSafe(int row, int col) {
+    int i, j;
+
+   
+    for (i = 0; i < col; i++)
+        if (board[row][i] == 'Q')
+            return false;
+
+    
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j] == 'Q')
+            return false;
+
+    
+    for (i = row, j = col; i < n && j >= 0; i++, j--)
+        if (board[i][j] == 'Q')
+            return false;
+
+    return true;
+}
+
+void solveNQueens(int col, int *solutionCount) {
+	int i;
+    if (col == n) {
+        (*solutionCount)++;
+        printSolution(*solutionCount);
+        return;
+    }
+
+    for ( i = 0; i < n; i++) {
+        if (isSafe(i, col)) {
+            board[i][col] = 'Q';
+            solveNQueens(col + 1, solutionCount);
+            board[i][col] = '.'; 
+        }
+    }
+}
+
+int main() {
+    n = 4; 
+    int solutionCount = 0;
+    int i,j;
+
+    
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            board[i][j] = '.';
+
+    solveNQueens(0, &solutionCount);
+
+    if (solutionCount == 0)
+        printf("No solutions found.\n");
+
+    return 0;
+}
