@@ -1,0 +1,33 @@
+#include<stdio.h>
+#include<string.h>
+
+int main() {
+    char A[] = "NOBODY_NOTICE_HIM";  
+    char B[] = "HIM";                 
+    int len = strlen(A);         
+    int lengt = strlen(B);         
+    int i, j, count = 0;            
+
+   
+    for (i = 0; i <= len - lengt; i++) {
+        
+        for (j = 0; j < lengt; j++) {
+            if (A[i + j] != B[j]) {
+                break;  
+            }
+        }
+
+        
+        if (j == lengt) {
+           
+            printf("Found at index %d\n", i);
+        }
+    }
+
+    
+    
+}
+
+OUTPUT
+
+Found at index 14
