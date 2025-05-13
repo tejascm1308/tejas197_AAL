@@ -1,0 +1,78 @@
+#include <stdio.h>
+
+void merge(int A[], int low, int mid, int high) {
+    int temp[100];  
+    int left = low, right = mid + 1, k = 0, i;
+    
+    while (left <= mid && right <= high) {
+        if (A[left] <= A[right]) {
+            temp[k++] = A[left++];
+        } else {
+            temp[k++] = A[right++];
+        }
+    }
+    
+    while (left <= mid) {
+        temp[k++] = A[left++];
+    }
+    
+    while (right <= high) {
+        temp[k++] = A[right++];
+    }
+    
+    for (i = 0; i < k; i++) {
+        A[low + i] = temp[i];  
+    }
+}
+
+void mergesort(int A[], int low, int high) {
+    if (low >= high) return;
+    int mid = (low + high) / 2;
+    mergesort(A, low, mid);
+    mergesort(A, mid + 1, high);
+    merge(A, low, mid, high);
+}
+
+int main() {
+    int len, i;
+    printf("Enter the length of the array: ");
+    scanf("%d", &len);
+
+    int A[100];  
+    printf("Enter array elements: ");
+    for (i = 0; i < len; i++) {
+        scanf("%d", &A[i]);
+    }
+    
+    printf("Before Merge Sort: ");
+    for (i = 0; i < len; i++) {
+        printf("%d ", A[i]);
+    }
+    printf("\n");
+    
+    mergesort(A, 0, len - 1);
+
+    printf("After Merge Sort: ");
+    for (i = 0; i < len; i++) {
+        printf("%d ", A[i]);
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+----------------------------------------------------------------------------------------------------------------------------
+
+OUTPUT
+
+Enter the length of the array: 8
+Enter array elements: 7
+8
+5
+6
+3
+4
+2
+1
+Before Merge Sort: 7 8 5 6 3 4 2 1 
+After Merge Sort: 1 2 3 4 5 6 7 8 
