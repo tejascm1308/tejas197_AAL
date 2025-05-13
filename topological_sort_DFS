@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 26 
+
+struct Node {
+    char vertex;
+    struct Node* next;
+};
+
+struct Graph {
+    int vertices;
+    struct Node** adjList;
+    int* visited;
+};
+
+char stack[MAX];
+int top = -1;
+
+struct Node* createNode(char v) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->vertex = v;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct Graph* createGraph(int vertices) {
+    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    graph->vertices = vertices;
+    graph->adjList = (struct Node**)malloc(vertices * sizeof(struct Node*));
+    graph->visited = (int*)malloc(vertices * sizeof(int));
+    int i;
+    for (i = 0; i < vertices; i++) {
+        graph->adjList[i] = NULL;
+        graph->visited[i] = 0;
+    }
+
+    return graph;
+}
+
+void addEdge(struct Graph* graph, char src, char dest) {
+    int srcIndex = src - 'A';
+    int destIndex = dest - 'A';
+
+    struct Node* newNode = createNode(dest);
+    newNode->next = graph->adjList[srcIndex];
+    graph->adjList[srcIndex] = newNode;
+}
+
+void topologicalSortUtil(struct Graph* graph, int v) {
+    graph->visited[v] = 1;
+
+    struct Node* temp = graph->adjList[v];
+    while (temp) {
+        if (!graph->visited[temp->vertex - 'A'])
+            topologicalSortUtil(graph, temp->vertex - 'A');
+        temp = temp->next;
+    }
+
+    stack[++top] = v + 'A';
+}
+
+void topologicalSort(struct Graph* graph) {
+	int i;
+    for (i = 0; i < graph->vertices; i++) {
+        if (!graph->visited[i])
+            topologicalSortUtil(graph, i);
+    }
+
+    printf("Topological Sort (using DFS): ");
+    while (top != -1)
+        printf("%c ", stack[top--]);
+    printf("\n");
+}
+
+int main() {
+    int vertices = 8;
+    struct Graph* graph = createGraph(vertices);
+
+    addEdge(graph, 'B', 'A');
+    addEdge(graph, 'B', 'D');
+    addEdge(graph, 'A', 'D');
+    addEdge(graph, 'D', 'E');
+    addEdge(graph, 'D', 'C');
+    addEdge(graph, 'G', 'D');
+    addEdge(graph, 'G', 'F');
+    addEdge(graph, 'F', 'E');
+    addEdge(graph, 'H', 'F');
+    
+    topologicalSort(graph);
+
+    return 0;
+}
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+OUTPUT:
+
+Topological Sort (using DFS): H G F B A D E C 
